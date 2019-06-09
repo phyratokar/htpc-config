@@ -39,7 +39,7 @@ services:
       WEBPASSWORD: 'pihole-0'
       DNS1: '8.8.8.8'
       DNS2: '8.8.4.4'
-      ServerIP: '192.168.86.136'
+      ServerIP: '192.168.86.143'
     volumes:
        - '/home/srv-user/htpc-config/pihole/etc-pihole/:/etc/pihole/'
        - '/home/srv-user/htpc-config/etc-dnsmasq.d/:/etc/dnsmasq.d/'
