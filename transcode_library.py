@@ -25,14 +25,10 @@ def is_transcoded(file_path):
 
 
 def transcode_single(file_path):
-    docker_command = 'docker run --rm jlesage/handbrake:latest '
-    docker_command += '-i {} '.format(file_path)
-    docker_command += '-o temp.mp4 '
-    docker_command += '-f av_mp4 '
-    docker_command += '-e x264 '
-    docker_command += '-q 25 '
-    docker_command += '--vfr '
-    docker_command += '-E copy:ac3'
+    docker_command = ["docker", "run", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
+    docker_command.append("-i")
+    docker_command.append(file_path)
+    docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3"])
 
     result = subprocess.run(docker_command)
     result.check_returncode()
