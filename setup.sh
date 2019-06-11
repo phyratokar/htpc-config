@@ -45,6 +45,7 @@ docker pull linuxserver/sonarr:latest
 docker pull linuxserver/radarr:latest
 docker pull linuxserver/lidarr:latest
 docker pull pihole/pihole:latest
+docker pull jlesage/handbrake:latest
 
 # DISABLE DNS
 sudo systemctl disable systemd-resolved.service
