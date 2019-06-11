@@ -32,7 +32,7 @@ def transcode_single(file_path):
     docker_command = ["docker", "run", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
     docker_command.append(file_path)
-    docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3"])
+    docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac"])
 
     transcode_log = open(os.path.splitext(file_path)[0] + '.transcodelog', 'w')
     result = subprocess.run(docker_command, stderr=transcode_log)
@@ -53,9 +53,9 @@ def transcode(root_dir, max_hours, log_path):
     file_paths = get_absolute_paths(root_dir)
     for file_path in file_paths:
         if not is_transcoding(file_path) and not is_transcoded(file_path) and is_video(file_path):
-            logfile.write('Starting transcoding of {}'.format(file_path) + '\n')
+            logfile.write('[{}] Starting transcoding of {}'.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), file_path) + '\n')
             transcode_single(file_path)
-            logfile.write('Completed transcoding {}'.format(file_path) + '\n')
+            logfile.write('[{}] Completed transcoding {}'.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"), file_path) + '\n')
             if (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
 
