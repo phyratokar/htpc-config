@@ -69,8 +69,10 @@ def transcode(root_dir, max_hours, log_path):
     for file_path in file_paths:
         if not is_transcoding(file_path) and not is_transcoded(file_path) and is_video(file_path):
             logfile.write('{},start,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
+            logfile.flush()
             transcode_single(file_path)
             logfile.write('{},end,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
+            logfile.flush()
             if (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
 
