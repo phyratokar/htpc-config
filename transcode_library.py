@@ -24,6 +24,10 @@ def is_transcoded(file_path):
     return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
 
 
+def is_transcoding(file_path):
+    return os.path.isfile(os.path.splitext(file_path)[0] + '.transcodelog')
+
+
 def transcode_single(file_path):
     docker_command = ["docker", "run", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
@@ -48,7 +52,7 @@ def transcode(root_dir, max_hours, log_path):
     start_time = datetime.now()
     file_paths = get_absolute_paths(root_dir)
     for file_path in file_paths:
-        if not is_transcoded(file_path) and is_video(file_path):
+        if not is_transcoding(file_path) and not is_transcoded(file_path) and is_video(file_path):
             logfile.write('Starting transcoding of {}'.format(file_path) + '\n')
             transcode_single(file_path)
             logfile.write('Completed transcoding {}'.format(file_path) + '\n')
