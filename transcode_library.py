@@ -32,7 +32,7 @@ def transcode_single(file_path):
     docker_command = ["docker", "run", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
     docker_command.append(file_path)
-    docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac"])
+    docker_command.extend(["-o", "/home/srv-user/media/temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac"])
 
     transcode_log = open(os.path.splitext(file_path)[0] + '.transcodelog', 'w')
     result = subprocess.run(docker_command, stderr=transcode_log)
@@ -41,7 +41,7 @@ def transcode_single(file_path):
     os.remove(file_path)
     new_file_path = os.path.splitext(file_path)[0] + '.mp4'
 
-    shutil.move('temp.mp4', new_file_path)
+    shutil.move('/home/srv-user/media/temp.mp4', new_file_path)
 
     with open(os.path.splitext(new_file_path)[0] + '.istranscoded', 'w'):
         pass
