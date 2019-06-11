@@ -54,7 +54,7 @@ sudo systemctl stop systemd-resolved
 # SETUP LIBRARY TRANSCODING
 sudo apt-get install libmediainfo0v5 python3-pip
 pip3 install pymediainfo
-crontabl -l > crontab_file
+crontab -l > crontab_file
 echo "00 02 * * * \"python3 /home/srv-user/htpc-config/transcode_library.py --root_dir=/home/srv-user/media --max_hours=5\"" >> crontab_file
 crontab crontab_file
 rm crontab_file
