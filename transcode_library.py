@@ -28,6 +28,7 @@ def get_quality_tag(file_path):
                 return " - WEB-DL-1080p"
             else:
                 return " - WEB-DL-720p"
+    return ''
 
 
 def is_transcoded(file_path):
