@@ -29,7 +29,7 @@ def is_transcoding(file_path):
 
 
 def transcode_single(file_path):
-    docker_command = ["docker", "run", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
+    docker_command = ["docker", "run", "--user", "1000", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
     docker_command.append(file_path)
     docker_command.extend(["-o", "/home/srv-user/media/temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac", "-Y", "1080", "-X", "1920"])
