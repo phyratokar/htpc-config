@@ -30,7 +30,8 @@ def transcode_single(file_path):
     docker_command.append(file_path)
     docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3"])
 
-    result = subprocess.run(docker_command)
+    transcode_log = open(os.path.splitext(file_path)[0] + '.transcodelog', 'w')
+    result = subprocess.run(docker_command, stdout=transcode_log, stderr=transcode_log)
     result.check_returncode()
 
     os.remove(file_path)
