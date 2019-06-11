@@ -31,25 +31,26 @@ def get_quality_tag(file_path):
 
 
 def is_transcoded(file_path):
-    return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
+    return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.istranscoded')
 
 
 def is_transcoding(file_path):
-    return os.path.isfile(os.path.splitext(file_path)[0] + '.transcodelog')
+    return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.transcodelog')
 
 
 def transcode_single(file_path):
+    new_file_path = os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.mp4'
+
     docker_command = ["docker", "run", "--user", "1000:1000", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
     docker_command.append(file_path)
     docker_command.extend(["-o", "/home/srv-user/media/temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac", "-Y", "1080", "-X", "1920", "--optimize"])
 
-    transcode_log = open(os.path.splitext(file_path)[0] + '.transcodelog', 'w')
+    transcode_log = open(os.path.splitext(new_file_path)[0] + '.transcodelog', 'w')
     result = subprocess.run(docker_command, stderr=transcode_log)
     result.check_returncode()
 
     os.remove(file_path)
-    new_file_path = os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.mp4'
 
     shutil.move('/home/srv-user/media/temp.mp4', new_file_path)
 
