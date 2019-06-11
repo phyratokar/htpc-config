@@ -31,7 +31,7 @@ def transcode_single(file_path):
     docker_command.extend(["-o", "temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3"])
 
     transcode_log = open(os.path.splitext(file_path)[0] + '.transcodelog', 'w')
-    result = subprocess.run(docker_command, stdout=transcode_log, stderr=transcode_log)
+    result = subprocess.run(docker_command, stderr=transcode_log)
     result.check_returncode()
 
     os.remove(file_path)
@@ -43,23 +43,27 @@ def transcode_single(file_path):
         pass
 
 
-def transcode(root_dir, max_hours):
+def transcode(root_dir, max_hours, log_path):
+    logfile = open(log_path, 'a')
     start_time = datetime.now()
     file_paths = get_absolute_paths(root_dir)
     for file_path in file_paths:
         if not is_transcoded(file_path) and is_video(file_path):
-            print('Starting transcoding of {}'.format(file_path))
+            logfile.write('Starting transcoding of {}'.format(file_path) + '\n')
             transcode_single(file_path)
-            print('Completed transcoding {}'.format(file_path))
+            logfile.write('Completed transcoding {}'.format(file_path) + '\n')
             if (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
+
+    logfile.close()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--max_hours', type=int)
+    parser.add_argument('--logfile', type=str, default='/home/srv-user/transcode.log')
 
     args = parser.parse_args()
 
-    transcode(args.root_dir, args.max_hours)
+    transcode(args.root_dir, args.max_hours, args.log_path)
