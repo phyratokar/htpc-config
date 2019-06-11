@@ -21,7 +21,7 @@ def is_video(file_path):
 
 
 def is_transcoded(file_path):
-    return os.path.isfile(os.path.dirname + '/.transcoded')
+    return os.path.isfile(os.path.dirname(file_path) + '/.transcoded')
 
 
 def transcode_single(file_path):
