@@ -20,6 +20,16 @@ def is_video(file_path):
     return False
 
 
+def get_quality_tag(file_path):
+    fileInfo = MediaInfo.parse(file_path)
+    for track in fileInfo.tracks:
+        if track.track_type == "Video":
+            if track.width == 1920:
+                return " - WEB-DL-1080p"
+            else:
+                return " - WEB-DL-720p"
+
+
 def is_transcoded(file_path):
     return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
 
@@ -39,7 +49,7 @@ def transcode_single(file_path):
     result.check_returncode()
 
     os.remove(file_path)
-    new_file_path = os.path.splitext(file_path)[0] + '.mp4'
+    new_file_path = os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.mp4'
 
     shutil.move('/home/srv-user/media/temp.mp4', new_file_path)
 
