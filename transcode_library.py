@@ -66,4 +66,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    transcode(args.root_dir, args.max_hours, args.log_path)
+    transcode(args.root_dir, args.max_hours, args.logfile)
