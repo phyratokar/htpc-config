@@ -48,14 +48,18 @@ def transcode_single(file_path):
 
 
 def transcode(root_dir, max_hours, log_path):
-    logfile = open(log_path, 'a')
+    if os.path.isfile(log_path):
+        logfile = logfile = open(log_path, 'a')
+    else:
+        logfile = logfile = open(log_path, 'w')
+        logfile.write('Time,Event,File\n')
     start_time = datetime.now()
     file_paths = get_absolute_paths(root_dir)
     for file_path in file_paths:
         if not is_transcoding(file_path) and not is_transcoded(file_path) and is_video(file_path):
-            logfile.write('[{}] Starting transcoding of {}'.format(datetime.now().isoformat(' ', 'seconds'), file_path) + '\n')
+            logfile.write('{},start,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
             transcode_single(file_path)
-            logfile.write('[{}] Completed transcoding {}'.format(datetime.now().isoformat(' ', 'seconds'), file_path) + '\n')
+            logfile.write('{},end,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
             if (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
 
