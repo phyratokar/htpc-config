@@ -21,7 +21,7 @@ def is_video(file_path):
 
 
 def is_transcoded(file_path):
-    return os.path.isfile(os.path.dirname(file_path) + '/.transcoded')
+    return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
 
 
 def transcode_single(file_path):
@@ -30,7 +30,7 @@ def transcode_single(file_path):
     docker_command += '-o temp.mp4 '
     docker_command += '-f av_mp4 '
     docker_command += '-e x264 '
-    docker_command += '-q 70 '
+    docker_command += '-q 25 '
     docker_command += '--vfr '
     docker_command += '-E copy:ac3'
 
@@ -38,11 +38,11 @@ def transcode_single(file_path):
     result.check_returncode()
 
     os.remove(file_path)
-    new_file_path = file_path[:-3] + 'mp4'
+    new_file_path = os.path.splitext(file_path)[0] + '.mp4'
 
     shutil.move('temp.mp4', new_file_path)
 
-    with open(os.path.dirname(new_file_path) + '/.transcoded', 'w'):
+    with open(os.path.splitext(new_file_path)[0] + '.istranscoded', 'w'):
         pass
 
 
