@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import shutil
 from pymediainfo import MediaInfo
+from uuid import uuid4
 
 
 def get_absolute_paths(root_dir):
@@ -45,11 +46,11 @@ def is_transcoding(file_path):
 
 def transcode_single(file_path):
     new_file_path = os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.mp4'
-
+    temp_file_name = uuid4().hex
     docker_command = ["docker", "run", "--user", "1000:1000", "-v", "/home/srv-user/media:/home/srv-user/media", "--rm", "jlesage/handbrake:latest", "HandBrakeCLI"]
     docker_command.append("-i")
     docker_command.append(file_path)
-    docker_command.extend(["-o", "/home/srv-user/media/temp.mp4", "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac", "-Y", "1080", "-X", "1920", "--optimize"])
+    docker_command.extend(["-o", "/home/srv-user/media/{}.mp4".format(temp_file_name), "-f", "av_mp4", "-e", "x264", "-q", "25", "--vfr", "-E", "copy:ac3,copy:aac", "-Y", "1080", "-X", "1920", "--optimize"])
 
     transcode_log = open(os.path.splitext(new_file_path)[0] + '.transcodelog', 'w')
     result = subprocess.run(docker_command, stderr=transcode_log)
@@ -57,7 +58,7 @@ def transcode_single(file_path):
 
     os.remove(file_path)
 
-    shutil.move('/home/srv-user/media/temp.mp4', new_file_path)
+    shutil.move('/home/srv-user/media/{}.mp4'.format(temp_file_name), new_file_path)
 
     with open(os.path.splitext(new_file_path)[0] + '.istranscoded', 'w'):
         pass
