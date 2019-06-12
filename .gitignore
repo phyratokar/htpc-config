@@ -1,0 +1,7 @@
+etc-dnsmasq.d/*
+lidarr/*
+nzbget/*
+pihole/*
+radarr/*
+sonarr/*
+transmission/*
