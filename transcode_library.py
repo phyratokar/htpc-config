@@ -24,7 +24,7 @@ def get_quality_tag(file_path):
     fileInfo = MediaInfo.parse(file_path)
     for track in fileInfo.tracks:
         if track.track_type == "Video":
-            if track.width == 1920:
+            if track.width > 1900:
                 return " - WEB-DL-1080p"
             else:
                 return " - WEB-DL-720p"
@@ -32,10 +32,14 @@ def get_quality_tag(file_path):
 
 
 def is_transcoded(file_path):
+    if 'WEB-DL-' in file_path:
+        return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
     return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.istranscoded')
 
 
 def is_transcoding(file_path):
+    if 'WEB-DL-' in file_path:
+        return os.path.isfile(os.path.splitext(file_path)[0] + '.transcodelog')
     return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.transcodelog')
 
 
