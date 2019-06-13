@@ -18,7 +18,7 @@ def mount_volume(server_ip):
 
 
 def start_transcoding():
-    command = ["python3", "/home/srv-user/htpc-config/transcode_library.py", "--root_dir", "/home/srv-user/media", "--max_hours", "5"]
+    command = ["python3", "/home/srv-user/htpc-config/transcode_library.py", "--root_dir", "/home/srv-user/media"]
     result = subprocess.run(command)
     result.check_returncode()
 

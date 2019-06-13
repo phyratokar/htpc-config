@@ -89,7 +89,7 @@ def transcode(root_dir, max_hours):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--root_dir', type=str)
-    parser.add_argument('--max_hours', type=int)
+    parser.add_argument('--max_hours', type=int, default=-1)
 
     args = parser.parse_args()
 
