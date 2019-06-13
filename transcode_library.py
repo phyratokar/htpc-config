@@ -64,7 +64,8 @@ def transcode_single(file_path):
         pass
 
 
-def transcode(root_dir, max_hours, log_path):
+def transcode(root_dir, max_hours):
+    log_path = '/home/srv-user/media/transcodelogs/{}.log'.format(uuid4().hex)
     if os.path.isfile(log_path):
         logfile = logfile = open(log_path, 'a')
     else:
@@ -89,8 +90,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--root_dir', type=str)
     parser.add_argument('--max_hours', type=int)
-    parser.add_argument('--logfile', type=str, default='/home/srv-user/transcode.log')
 
     args = parser.parse_args()
 
-    transcode(args.root_dir, args.max_hours, args.logfile)
+    transcode(args.root_dir, args.max_hours)

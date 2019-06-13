@@ -5,3 +5,4 @@ pihole/*
 radarr/*
 sonarr/*
 transmission/*
+.vscode/*
