@@ -5,6 +5,7 @@ import subprocess
 import shutil
 from pymediainfo import MediaInfo
 from uuid import uuid4
+import time
 
 
 def get_absolute_paths(root_dir):
@@ -32,16 +33,26 @@ def get_quality_tag(file_path):
     return ''
 
 
-def is_transcoded(file_path):
+def get_tag_file_path(file_path, ending):
     if 'WEB-DL-' in file_path:
-        return os.path.isfile(os.path.splitext(file_path)[0] + '.istranscoded')
-    return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.istranscoded')
+        return os.path.splitext(file_path)[0] + '.' + ending
+    return os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.' + ending
+
+
+def is_transcoded(file_path):
+    return os.path.isfile(get_tag_file_path(file_path, 'istranscoded'))
 
 
 def is_transcoding(file_path):
-    if 'WEB-DL-' in file_path:
-        return os.path.isfile(os.path.splitext(file_path)[0] + '.transcodelog')
-    return os.path.isfile(os.path.splitext(file_path)[0] + get_quality_tag(file_path) + '.transcodelog')
+    transcodelog_path = get_tag_file_path(file_path, 'transcodelog')
+    if os.path.isfile(transcodelog_path):
+        last_change = os.path.getmtime(transcodelog_path)
+        if time.time() - last_change > 36000: # Check if file was modified in last 10 hours > detect program crashes
+            return False
+        else:
+            return True
+    else:
+        return False
 
 
 def transcode_single(file_path):
