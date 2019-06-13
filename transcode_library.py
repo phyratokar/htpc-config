@@ -80,7 +80,7 @@ def transcode(root_dir, max_hours):
             transcode_single(file_path)
             logfile.write('{},end,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
             logfile.flush()
-            if (datetime.now() - start_time).seconds >= max_hours*3600:
+            if max_hours > 0 and (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
 
     logfile.close()
