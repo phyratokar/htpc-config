@@ -74,6 +74,8 @@ def transcode_single(file_path):
     with open(os.path.splitext(new_file_path)[0] + '.istranscoded', 'w'):
         pass
 
+    return new_file_path
+
 
 def transcode(root_dir, max_hours):
     log_path = '/home/srv-user/media/transcodelogs/{}.log'.format(uuid4().hex)
@@ -88,8 +90,8 @@ def transcode(root_dir, max_hours):
         if not is_transcoding(file_path) and not is_transcoded(file_path) and is_video(file_path):
             logfile.write('{},start,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
             logfile.flush()
-            transcode_single(file_path)
-            logfile.write('{},end,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), file_path))
+            new_file_path = transcode_single(file_path)
+            logfile.write('{},end,{}\n'.format(datetime.now().isoformat(' ', 'seconds'), new_file_path))
             logfile.flush()
             if max_hours > 0 and (datetime.now() - start_time).seconds >= max_hours*3600:
                 break
